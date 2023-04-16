@@ -173,6 +173,11 @@ func TestGetCommand(t *testing.T) {
 			args:     []string{"--debug", "compose", "-f", "titi.yaml", "up"},
 			expected: "compose up",
 		},
+		{
+			name:     "extension install myorg/my-extension",
+			args:     []string{"extension", "install", "myorg/my-extension"},
+			expected: "extension install",
+		},
 	}
 
 	for _, testCase := range testCases {
@@ -371,6 +376,32 @@ func TestBuild(t *testing.T) {
 			name:     "buildx version",
 			args:     []string{"buildx", "version"},
 			expected: "buildx version",
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			result := GetCommand(testCase.args)
+			assert.Equal(t, testCase.expected, result)
+		})
+	}
+}
+
+func TestScout(t *testing.T) {
+	testCases := []struct {
+		name     string
+		args     []string
+		expected string
+	}{
+		{
+			name:     "scout",
+			args:     []string{"scout"},
+			expected: "scout",
+		},
+		{
+			name:     "scout - cves ",
+			args:     []string{"scout", "cves", "alpine"},
+			expected: "scout cves",
 		},
 	}
 

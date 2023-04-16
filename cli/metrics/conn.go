@@ -1,5 +1,5 @@
 /*
-   Copyright 2020 Docker Compose CLI authors
+   Copyright 2022 Docker Compose CLI authors
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,16 +14,20 @@
    limitations under the License.
 */
 
-package metadata
+package metrics
 
-// Get returns the JSON metadata linked to the invoked command
-func Get(cliSource string, args []string) string {
-	if len(args) == 0 {
-		return cliSource
+import (
+	"context"
+	"net"
+	"net/http"
+)
+
+func newHTTPClient() *http.Client {
+	return &http.Client{
+		Transport: &http.Transport{
+			DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+				return conn()
+			},
+		},
 	}
-	switch args[0] {
-	case "build", "buildx":
-		cliSource = getBuildMetadata(cliSource, args[0], args[1:])
-	}
-	return cliSource
 }
